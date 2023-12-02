@@ -84,7 +84,7 @@ public class users{
     private userType usertype;
 
     @OneToMany(mappedBy = "idUsers", cascade = CascadeType.ALL)
-    private List<address> addresses = new ArrayList<address>();
+    private List<address> addresses;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "idUsers", cascade = CascadeType.ALL)

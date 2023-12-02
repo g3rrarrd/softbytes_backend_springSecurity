@@ -73,7 +73,7 @@ public class usersServiceImpl implements usersService{
             users.setUsertype(this.userTypeRepository.findById(1).get());
             users.setUsername(this.obtenerUsername(users.getEmail()));
             users.setAuthorities(List.of(this.authorityRepository.findByName(authorityRoles.ROLE_USER).get()));
-            this.usersRepository.save(users);
+            this.usersRepository.saveAll(List.of(users));
             return true;
         }
 

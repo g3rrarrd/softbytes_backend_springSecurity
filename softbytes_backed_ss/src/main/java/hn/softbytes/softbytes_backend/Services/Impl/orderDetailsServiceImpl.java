@@ -114,9 +114,11 @@ public class orderDetailsServiceImpl implements orderDetailsService{
         if(this.orderDetailsRepository.findAll().size() > 0){
             for (orderDetail orderDetail : this.orderDetailsRepository.findAll()) {
                 
-                if(orderDetail.getIdOrders().getIdOrders() == idPedido){
+               if(orderDetail.getIdOrders() != null){
+                 if(orderDetail.getIdOrders().getIdOrders() == idPedido){
                     monto += (orderDetail.getUnityPrice() * orderDetail.getQuantity());
                 }
+               }
 
             }
         }

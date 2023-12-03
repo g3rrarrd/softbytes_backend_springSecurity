@@ -7,11 +7,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hn.softbytes.softbytes_backend.Models.orderDetail;
 import hn.softbytes.softbytes_backend.Models.orderStatus;
 import hn.softbytes.softbytes_backend.Models.orders;
+import hn.softbytes.softbytes_backend.Models.sales;
 import hn.softbytes.softbytes_backend.Models.users;
+import hn.softbytes.softbytes_backend.Repositories.orderDetailsRepository;
 import hn.softbytes.softbytes_backend.Repositories.orderStatusRepository;
 import hn.softbytes.softbytes_backend.Repositories.ordersRepository;
+import hn.softbytes.softbytes_backend.Repositories.salesRepository;
 import hn.softbytes.softbytes_backend.Repositories.usersRepository;
 import hn.softbytes.softbytes_backend.Services.ordersService;
 
@@ -26,6 +30,12 @@ public class ordersServiceImpl implements ordersService{
 
     @Autowired
     private orderStatusRepository orderStatusRepository;
+
+    @Autowired 
+    private orderDetailsRepository orderDetailsRepository;
+
+    @Autowired
+    private salesRepository salesRepository;
 
     @Override
     public orders obtenerPedido(int id) {
@@ -69,6 +79,22 @@ public class ordersServiceImpl implements ordersService{
     public boolean eliminarPedido(int id) {
         
         if(this.ordersRepository.existsById(id)){
+            if(this.orderDetailsRepository.findAll().size() > 0){
+                for(orderDetail orderDetail : this.orderDetailsRepository.findAll()){
+                    if(orderDetail.getIdOrders().getIdOrders() == id){
+                        this.orderDetailsRepository.delete(orderDetail);
+                    }
+                }
+            }
+            if (this.salesRepository.findAll().size() > 0) {
+                for (sales sales : this.salesRepository.findAll()) {
+                    if(sales.getIdOrder().getIdOrders() == id){
+                        this.salesRepository.delete(sales);
+                        break;
+                    }
+                }
+                
+            }
             this.ordersRepository.deleteById(id);
             return true;
         }

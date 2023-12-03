@@ -13,12 +13,16 @@ import hn.softbytes.softbytes_backend.Models.cities;
 import hn.softbytes.softbytes_backend.Models.countries;
 import hn.softbytes.softbytes_backend.Models.departments;
 import hn.softbytes.softbytes_backend.Models.newUserJson;
+import hn.softbytes.softbytes_backend.Models.orderDetail;
+import hn.softbytes.softbytes_backend.Models.orders;
 import hn.softbytes.softbytes_backend.Models.users;
 import hn.softbytes.softbytes_backend.Repositories.addressRepository;
 import hn.softbytes.softbytes_backend.Repositories.authorityRepository;
 import hn.softbytes.softbytes_backend.Repositories.citiesRepository;
 import hn.softbytes.softbytes_backend.Repositories.countriesRepository;
 import hn.softbytes.softbytes_backend.Repositories.departmentsRepository;
+import hn.softbytes.softbytes_backend.Repositories.orderDetailsRepository;
+import hn.softbytes.softbytes_backend.Repositories.ordersRepository;
 import hn.softbytes.softbytes_backend.Repositories.userTypeRepository;
 import hn.softbytes.softbytes_backend.Repositories.usersRepository;
 import hn.softbytes.softbytes_backend.Services.usersService;
@@ -40,6 +44,12 @@ public class usersServiceImpl implements usersService{
         private PasswordEncoder passwordEncoder;
     @Autowired
     private authorityRepository authorityRepository;
+    @Autowired
+    private ordersRepository ordersRepository;
+    @Autowired 
+    private ordersServiceImpl ordersServiceImpl;
+    @Autowired
+    private orderDetailsRepository orderDetailsRepository;
 
     @Override
     public boolean crearCliente(newUserJson newUserJson) {
@@ -152,18 +162,37 @@ public class usersServiceImpl implements usersService{
         if(this.usersRepository.existsById(id)){
 
             try {
+                users user = this.usersRepository.findById(id).get();
+                if(user.getAddresses().size() > 0){
+                    this.addressRepository.deleteAll(user.getAddresses());
+                }
+                if (user.getIOrders().size() > 0) {
+                    for (orders orders : user.getIOrders()) {
+                        this.borrarOrderDetails(orders.getIdOrders());
+                    }
+                }
+                this.ordersRepository.deleteAll(user.getIOrders());
                 this.usersRepository.deleteById(id);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace(); 
                 return false;
             }
-            
-
         }
-
         return false;
     }
+
+    private void borrarOrderDetails(int id){{
+        if(this.orderDetailsRepository.findAll().size() > 0){
+            for (orderDetail orderDetail : this.orderDetailsRepository.findAll()) {
+                if(orderDetail.getIdOrders() != null){
+                    if(orderDetail.getIdOrders().getIdOrders() == id){
+                    this.orderDetailsRepository.delete(orderDetail);
+                }
+                }
+            }
+        }
+    }}
 
     @Override
     public users buscarCliente(int id) {

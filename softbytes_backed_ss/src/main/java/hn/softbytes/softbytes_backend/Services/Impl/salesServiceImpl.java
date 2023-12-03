@@ -32,40 +32,23 @@ public class salesServiceImpl implements salesService{
     private orderStatusRepository orderStatusRepository;
 
     @Override
-    public boolean crearVenta(int idPedido) {
+    public boolean crearVenta(int idPedido, sales newSales) {
         
         sales sales = new sales();
-        orders orders = new orders();
 
-        if(this.ordersRepository.findById(idPedido) != null){
-            orders = this.ordersRepository.findById(idPedido).get();
-            sales.setSubTotal(orders.getAmount());
-            if(isSalesValidate(sales)){
-                    
-                sales.setIsv(0.15);
-                sales.setTotal(sales.getSubTotal() + (sales.getSubTotal() * sales.getIsv()));
-                sales.setDate(LocalDate.now());
-                orders.setIdOrderStatus(this.orderStatusRepository.findById(3).get());
-                sales.setIdOrder(orders);
-                this.salesRepository.save(sales);
+        if(this.ordersRepository.findById(idPedido) != null && newSales != null){
+           sales.setDate(newSales.getDate());
+           sales.setIdOrder(this.ordersRepository.findById(idPedido).get());
+           sales.setSubTotal(newSales.getSubTotal());
+           sales.setIsv(newSales.getIsv());
+           sales.setTotal(newSales.getTotal());
+           
+           this.salesRepository.save(sales);
 
-                return true;
+           return true;
         }
             return false;
         }
-
-        return false;
-    }
-
-    private boolean isSalesValidate(sales sales){
-
-        if(sales.getSubTotal() > 0){
-            return true;
-        }
-
-        return false;
-
-    }
 
     @Override
     public sales buscarVentaPedido(int id) {

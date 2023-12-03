@@ -21,8 +21,8 @@ public class salesController {
     private salesServiceImpl salesServiceImpl;
 
     @PostMapping("/crear")
-    public boolean crearVenta(@RequestParam(name = "idPedido")int idPedido){
-        if(this.salesServiceImpl.crearVenta(idPedido)){
+    public boolean crearVenta(@RequestParam(name = "idPedido")int idPedido,@RequestBody sales sales){
+        if(this.salesServiceImpl.crearVenta(idPedido, sales)){
             return true;
         }
         return false;

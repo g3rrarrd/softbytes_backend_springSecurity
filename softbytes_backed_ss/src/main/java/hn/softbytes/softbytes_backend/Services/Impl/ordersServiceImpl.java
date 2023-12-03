@@ -48,21 +48,22 @@ public class ordersServiceImpl implements ordersService{
     }
 
     @Override
-    public boolean crearPedido(int idCliente, orders orders) {
+    public int crearPedido(int idCliente, orders orders) {
     
         
         List<users> users = new LinkedList<users>();
+
 
         if( this.usersRepository.findById(idCliente) != null){
             orders.setOrderDate(LocalDate.now());
             orders.setIdOrderStatus(this.orderStatusRepository.findById(1).get());
             users.add(this.usersRepository.findById(idCliente).get());
             orders.setIdUsers(users);
-            this.ordersRepository.save(orders);
-            return true;
+            orders = this.ordersRepository.save(orders);
+            return orders.getIdOrders();
         }
 
-        return false;
+        return -1;
 
     }
 

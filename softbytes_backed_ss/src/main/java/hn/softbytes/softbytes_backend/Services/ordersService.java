@@ -19,7 +19,7 @@ public interface ordersService {
      * @param orders orders:Json
      * @return boolean
      */
-    public boolean crearPedido(int idCliente, orders orders);
+    public int crearPedido(int idCliente, orders orders);
 
     /*
      * Obtendra el estado del pedido buscado por la id

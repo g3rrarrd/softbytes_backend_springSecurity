@@ -38,11 +38,14 @@ public class orderController {
     }
 
     @PostMapping("/crear")
-    public boolean crearPedido(@RequestParam(name = "idCliente")int idCliente, @RequestBody orders orders){
-        if(this.ordersServiceImpl.crearPedido(idCliente, orders)){
-            return true;
+    public int crearPedido(@RequestParam(name = "idCliente")int idCliente, @RequestBody orders orders){
+
+        int idPedido = this.ordersServiceImpl.crearPedido(idCliente, orders);
+
+        if(idPedido > 0){
+            return idPedido;
         }
-        return false;
+        return idPedido;
     }
 
     @GetMapping("/obtener/pedidos")

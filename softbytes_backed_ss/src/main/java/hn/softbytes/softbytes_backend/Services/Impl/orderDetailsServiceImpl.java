@@ -39,7 +39,6 @@ public class orderDetailsServiceImpl implements orderDetailsService{
             orderDetail.setIdOrders(orders);
             orderDetail.setProducts(products);
             this.orderDetailsRepository.save(orderDetail);
-            orders.setAmount(sumarMonto(idPedido));
             this.ordersRepository.save(orders);
             return true;
         }
@@ -75,13 +74,11 @@ public class orderDetailsServiceImpl implements orderDetailsService{
             orders = this.ordersRepository.findById(orderDetail.getIdOrders().getIdOrders()).get();
             if(cantidad == 0){
                 this.eliminarDetallePedido(id);
-                orders.setAmount(this.sumarMonto(orders.getIdOrders()));
                 this.ordersRepository.save(orders);
                 return false;
             }
             orderDetail.setQuantity(cantidad);
             this.orderDetailsRepository.save(orderDetail);
-            orders.setAmount(this.sumarMonto(orders.getIdOrders()));
             this.ordersRepository.save(orders);
             return true;
         }
@@ -99,31 +96,11 @@ public class orderDetailsServiceImpl implements orderDetailsService{
             orderDetail = this.orderDetailsRepository.findById(id).get();
             orders = orderDetail.getIdOrders();
             this.orderDetailsRepository.delete(this.orderDetailsRepository.findById(id).get());
-            orders.setAmount(this.sumarMonto(orders.getIdOrders()));
             this.ordersRepository.save(orders);
             return true;
         }
 
         return false;
-    }
-
-     private double sumarMonto(int idPedido){
-
-        double monto = 0;
-
-        if(this.orderDetailsRepository.findAll().size() > 0){
-            for (orderDetail orderDetail : this.orderDetailsRepository.findAll()) {
-                
-               if(orderDetail.getIdOrders() != null){
-                 if(orderDetail.getIdOrders().getIdOrders() == idPedido){
-                    monto += (orderDetail.getUnityPrice() * orderDetail.getQuantity());
-                }
-               }
-
-            }
-        }
-
-        return monto;
     }
     
 }

@@ -11,7 +11,7 @@ public interface salesService {
      * @param sales:Json
      * @return sales
      */
-    public boolean crearVenta(int idPedido);
+    public boolean crearVenta(int idPedido, sales newSales);
 
     /*
      * Obtiene la venta del pedido

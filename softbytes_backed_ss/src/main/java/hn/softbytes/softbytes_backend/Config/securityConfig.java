@@ -112,6 +112,7 @@ public class securityConfig {
                     .requestMatchers(HttpMethod.GET, "/auth/direccion/**").authenticated()
                     .requestMatchers(HttpMethod.GET, "/auth/direccion/obtener/direccion/**").authenticated()
                     .requestMatchers(HttpMethod.DELETE, "/auth/direccion/**").authenticated()
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                     .and()
                     .csrf().disable()
                     .build();

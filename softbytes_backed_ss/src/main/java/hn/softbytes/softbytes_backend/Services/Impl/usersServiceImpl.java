@@ -56,20 +56,22 @@ public class usersServiceImpl implements usersService{
         
         List<address> addressList = new LinkedList<address>();
         address address = new address();
-        users users = newUserJson.getUser();
+        users users = new users();
         cities city = new cities();
         
 
-        if(isValidateUser(users)){
+        if(isValidateUser(newUserJson)){
            if(!this.usersRepository.findAll().isEmpty()){
              for (users user : this.usersRepository.findAll()) {
-                if (user.getEmail().equals(users.getEmail())) {
+                if (user.getEmail().equals(newUserJson.getEmail())) {
                     return false;
                 }
             }
            }
-           
-           city = this.econtrarCiudad(newUserJson.getCity());
+
+           if(this.citiesRepository.existsById(newUserJson.getCity())){
+
+            city = this.citiesRepository.findById(newUserJson.getCity()).get();
 
             addressList.add(address);
             addressList.get(0).setAddress(newUserJson.getAddress());
@@ -78,30 +80,31 @@ public class usersServiceImpl implements usersService{
             addressList.get(0).getIdCity().setDepartments(city.getDepartments());
             addressList.get(0).getIdCity().getDepartments().setIdCountry(city.getDepartments().getIdCountry());
             addressList.get(0).setIdUsers(users);
-            users.setPassword(passwordEncoder.encode(users.getPassword()));
+            users.setName(newUserJson.getName());
+            users.setLastName(newUserJson.getLastName());
+            users.setEmail(newUserJson.getEmail());
+            users.setContactInformation(newUserJson.getContactInformation());
+            users.setDateofBirth(newUserJson.getDateOfBirth());
+            users.setShippingPreference(newUserJson.getShippingPreference());
+            users.setTelephone(newUserJson.getTelephone());
+            users.setPassword(passwordEncoder.encode(newUserJson.getPassword()));
             users.setAddresses(addressList);
             users.setUsertype(this.userTypeRepository.findById(1).get());
             users.setUsername(this.obtenerUsername(users.getEmail()));
             users.setAuthorities(List.of(this.authorityRepository.findByName(authorityRoles.ROLE_USER).get()));
             this.usersRepository.saveAll(List.of(users));
             return true;
+
+           }
+           
         }
 
         return false;
     }
 
-    private cities econtrarCiudad(String nameCity){
-        for (cities cities : this.citiesRepository.findAll()) {
-            if(cities.getName().equals(nameCity)){
-                return cities;
-            }
-        }
-        return null;
-    }
-
     
-    private boolean isValidateUser(users users){
-        if(users.getDateofBirth() != null
+    private boolean isValidateUser(newUserJson users){
+        if(users.getDateOfBirth() != null
         && !users.getEmail().isEmpty() 
         && !users.getName().isEmpty() 
         && !users.getLastName().isEmpty()

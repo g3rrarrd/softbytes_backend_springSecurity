@@ -1,5 +1,7 @@
 package hn.softbytes.softbytes_backend.Models;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +11,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class newUserJson {
     
-    private users user;
+    private String name;
 
-    private String city;
+    private String lastName;
+
+    private String password;
+
+    private String telephone;
+
+    private String email;
+
+    private LocalDate dateOfBirth;
+
+    private String contactInformation;
+
+    private String shippingPreference;
+
+    private int city;
 
     private String address;
 
